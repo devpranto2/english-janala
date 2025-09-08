@@ -7,6 +7,12 @@ const loadlessons=()=>{
     })
 }
 
+const removeActive=()=>{
+    const lessonButtons=document.querySelectorAll(".lesson-button")
+    // console.log(lessonButtons)
+    lessonButtons.forEach(btn=>btn.classList.remove("active"))
+}
+
 const loadLevelWork=(id)=>{
     console.log(id);
 
@@ -14,7 +20,12 @@ const loadLevelWork=(id)=>{
     fetch(url)
     .then(res=>res.json())
     .then(data=>{
+        removeActive();//remove all active class
+        const clickbtn=document.getElementById(`lesson-btn-${id}`)
+        
+        clickbtn.classList.add('active')
         displayLevelword(data.data)
+
     })
 };
 
@@ -22,13 +33,22 @@ const displayLevelword=(words)=>{
     const wordContainer=document.getElementById("word-container");
     wordContainer.innerHTML=""; 
 
+    if(words.length == 0){
+        wordContainer.innerHTML=`<div class="text-center col-span-full">
+             <img class="mx-auto" src="assets/alert-error.png" alt="">
+            <p class="text-lg text-[#79716B] mb-4">এই Lesson এ এখনো কোন Vocabulary যুক্ত করা হয়নি।</p>
+            <h1 class="text-4xl font-semibold font-bangla text-[#292524]">নেক্সট Lesson এ যান</h1>
+         </div>`; 
+        return
+    }
+
     words.forEach(word => {
-        console.log(word);
+        // console.log(word);
         const cardDiv=document.createElement("div")
         cardDiv.innerHTML=`<div class="bg-white rounded-xl shadow-xl text-center py-10 px-5 space-y-4 ">
-            <h2 class="text-3xl font-bold ">${word.word}</h2>
+            <h2 class="text-3xl font-bold ">${word.word ? word.word : "শব্দ খুঁজে পাচ্ছি না।"}</h2>
             <p>Meaning /Pronounciation</p>
-            <h1 class="text-2xl font-semibold font-bangla mt-3">"${word.meaning} / ${word.Pronounciation}"</h1>
+            <h1 class="text-2xl font-semibold font-bangla mt-3">"${word.meaning ? word.meaning : "অর্থ খুঁজে পাচ্ছি না"} / ${word.pronunciation ? word.pronunciation : "উচ্চারণ খুঁজে পাচ্ছি না।"}"</h1>
             <div class="flex justify-between items-center">
                 <button class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-regular fa-circle-question"></i></button>
                 <button class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-solid fa-volume-high"></i></button>
@@ -56,7 +76,7 @@ const displayLesson=(lessons)=>{
         // 3.create element
         const btnDiv=document.createElement("div");
         btnDiv.innerHTML=`
-                <button onclick="loadLevelWork(${lesson.level_no})" class="btn btn-outline btn-primary">
+                <button id="lesson-btn-${lesson.level_no}" onclick="loadLevelWork(${lesson.level_no})" class="btn btn-outline btn-primary lesson-button">
                 <i class="fa-solid fa-book-open-reader"></i>Lesson - ${lesson.level_no}</button>`
     //4.append into container
 
