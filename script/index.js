@@ -1,3 +1,9 @@
+const createElements=(arr)=>{
+   const htmlelement=arr.map(el=>`<span class="btn">${el}</span>`)
+    return(htmlelement.join(" "))
+}
+
+
 const loadlessons=()=>{
     url="https://openapi.programming-hero.com/api/levels/all"
     fetch(url)
@@ -29,6 +35,52 @@ const loadLevelWork=(id)=>{
     })
 };
 
+const loadworddetail=async(id)=>{
+    const url=`https://openapi.programming-hero.com/api/word/${id}`
+    // console.log(url);
+    const res=await fetch(url);
+    const details=await res.json();
+    displayworddetails(details.data)
+}
+
+const displayworddetails=(word)=>{
+    console.log(word);
+    const detailbox=document.getElementById("detail-container")
+    detailbox.innerHTML=`<div>
+                    <h2 class="text-2xl font-semibold">${word.word} (<i class="fa-solid fa-microphone-lines"></i>:${word.pronunciation})</h2>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold">Meaning</h2>
+                    <p>${word.meaning}</p>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold">Example</h2>
+                    <p>${word.sentence}</p>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold space-y-3">সমার্থক শব্দ গুলো</h2>
+                    <div class="">${createElements(word.synonyms)} </div>
+                    
+                </div> `;
+    document.getElementById("word_modal").showModal();
+}
+
+// {
+//     "word": "Eager",
+//     "meaning": "আগ্রহী",
+//     "pronunciation": "ইগার",
+//     "level": 1,
+//     "sentence": "The kids were eager to open their gifts.",
+//     "points": 1,
+//     "partsOfSpeech": "adjective",
+//     "synonyms": [
+//         "enthusiastic",
+//         "excited",
+//         "keen"
+//     ],
+//     "id": 5
+// }
+
 const displayLevelword=(words)=>{
     const wordContainer=document.getElementById("word-container");
     wordContainer.innerHTML=""; 
@@ -50,7 +102,7 @@ const displayLevelword=(words)=>{
             <p>Meaning /Pronounciation</p>
             <h1 class="text-2xl font-semibold font-bangla mt-3">"${word.meaning ? word.meaning : "অর্থ খুঁজে পাচ্ছি না"} / ${word.pronunciation ? word.pronunciation : "উচ্চারণ খুঁজে পাচ্ছি না।"}"</h1>
             <div class="flex justify-between items-center">
-                <button class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-regular fa-circle-question"></i></button>
+                <button onclick="loadworddetail(${word.id})" class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-regular fa-circle-question"></i></button>
                 <button class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-solid fa-volume-high"></i></button>
             </div>
          </div>`
