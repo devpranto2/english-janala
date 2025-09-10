@@ -1,3 +1,11 @@
+function pronounceWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-EN"; // English
+  window.speechSynthesis.speak(utterance);
+}
+
+
+
 const createElements=(arr)=>{
    const htmlelement=arr.map(el=>`<span class="btn">${el}</span>`)
     return(htmlelement.join(" "))
@@ -75,21 +83,6 @@ const displayworddetails=(word)=>{
     document.getElementById("word_modal").showModal();
 }
 
-// {
-//     "word": "Eager",
-//     "meaning": "আগ্রহী",
-//     "pronunciation": "ইগার",
-//     "level": 1,
-//     "sentence": "The kids were eager to open their gifts.",
-//     "points": 1,
-//     "partsOfSpeech": "adjective",
-//     "synonyms": [
-//         "enthusiastic",
-//         "excited",
-//         "keen"
-//     ],
-//     "id": 5
-// }
 
 const displayLevelword=(words)=>{
     const wordContainer=document.getElementById("word-container");
@@ -114,7 +107,7 @@ const displayLevelword=(words)=>{
             <h1 class="text-2xl font-semibold font-bangla mt-3">"${word.meaning ? word.meaning : "অর্থ খুঁজে পাচ্ছি না"} / ${word.pronunciation ? word.pronunciation : "উচ্চারণ খুঁজে পাচ্ছি না।"}"</h1>
             <div class="flex justify-between items-center">
                 <button onclick="loadworddetail(${word.id})" class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-regular fa-circle-question"></i></button>
-                <button class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-solid fa-volume-high"></i></button>
+                <button onclick="pronounceWord('${word.word}')" class="bg-[#1A91FF20] hover:bg-[#1A91FF60] btn"><i class="fa-solid fa-volume-high"></i></button>
             </div>
          </div>`
 
@@ -123,13 +116,7 @@ const displayLevelword=(words)=>{
     manegespin(false)
 }
 
-// {
-//     "id": 153,
-//     "level": 6,
-//     "word": "Dichotomy",
-//     "meaning": "দ্বৈততা",
-//     "pronunciation": "ডাইকোটোমি"
-// }
+
 
 const displayLesson=(lessons)=>{
     // 1.get the container 
